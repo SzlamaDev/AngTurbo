@@ -84,9 +84,9 @@
             ?>
         </select><br />
         <label for="word">Słówko po Polsku:</label>
-        <input type="text" id="wordp" name="wordp"><br />
+        <input type="text" id="word_pl" name="word_pl"><br />
         <label for="word">Słówko po Angielsku:</label>
-        <input type="text" id="worda" name="worda"><br />
+        <input type="text" id="word_en" name="word_en"><br />
         <label for="definition">Definicja:</label>
         <input type="text" id="definition" name="definition"><br />
         <input type="submit" value="Dodaj">
@@ -94,11 +94,11 @@
         <?php
             @$student = $_POST["student"];
             @$category = $_POST["category"];
-            @$word = $_POST["wordp"];
-            @$worda = $_POST["worda"];
+            @$word_pl = $_POST["word_pl"];
+            @$word_en = $_POST["word_en"];
             @$definition = $_POST["definition"];
-        if (!empty($worda) && !empty($word)){
-            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category', '$ruchanie', '$student', '$word', '$worda', '$definition');");
+        if (!empty($word_pl) && !empty($word_en)){
+            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category', '$ruchanie', '$student', '$word_en', '$word_pl', '$definition');");
         }
         else{
             echo "Pola nie moga byc puste!";
