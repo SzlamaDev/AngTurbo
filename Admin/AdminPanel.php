@@ -97,7 +97,12 @@
             @$word = $_POST["wordp"];
             @$worda = $_POST["worda"];
             @$definition = $_POST["definition"];
+        if (!empty($worda) && !empty($word)){
             @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category', '$ruchanie', '$student', '$word', '$worda', '$definition');");
+        }
+        else{
+            echo "Pola nie moga byc puste!";
+        }
             $polaczenie->close();
         ?>
     </body>
