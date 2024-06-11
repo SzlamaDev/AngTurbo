@@ -91,9 +91,10 @@
                 }
             ?>
             <h3>Dodaj słówka:</h3>
-            <form method="post" action="ParentPanel.php">
+            <form method="post" action="ParentPanel.php" >
                 <label for="db">Uczeń:</label>
                 <select id="db" name="db">
+
                     <?php
                     $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
                     while ($row = mysqli_fetch_array($zapytanie)){
@@ -129,8 +130,9 @@
             }
             ?>
             <h3>Dodane słówka:</h3>
-            <form method="post" action="ParentPanel.php">
-                <select id="category" name="category1">
+            <form method="post" action="ParentPanel.php" >
+                <select id="category" name="category1" onchange="this.form.submit();">
+                    <option>Wybierz kategorie</option>
                     <option value="all">Wszystkie</option>
                     <?php
                     $zapytanie = $polaczenie->query("SELECT id, name from category where parent_id = $id;");
@@ -139,7 +141,6 @@
                     }
                     ?>
                 </select>
-                <input type="submit" value="pokaż">
             </form>
             <table>
                 <tr>
