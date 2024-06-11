@@ -55,7 +55,7 @@
                     }
                     $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
                     while ($row = mysqli_fetch_array($zapytanie)) {
-                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" . "</tr>";
+                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td><button type='submit' value='".$row[0]."'>usuń</button>". "</tr>";
                     }
                 }
                 ?>
@@ -80,7 +80,9 @@
             <?php
                 @$student = $_POST['db1'];
                 @$category_name = $_POST['category_name'];
-                @mysqli_query($polaczenie,"INSERT INTO category(parent_id, student_id,name) values('$id','$student','$category_name');")
+                if (!empty($word_pl) && !empty($word_en)) {
+                    @mysqli_query($polaczenie, "INSERT INTO category(parent_id, student_id,name) values('$id','$student','$category_name');");
+                }
             ?>
             <h3>Dodaj słówka:</h3>
             <form method="post" action="ParentPanel.php">
@@ -116,18 +118,28 @@
             @$word_en = $_POST["word_en"];
             @$word_pl = $_POST["word_pl"];
             @$definition = $_POST["definition"];
-            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student','$word_en','$word_pl' ,'$definition');");
-
+            if (!empty($word_pl) && !empty($word_en)) {
+                @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student','$word_en','$word_pl' ,'$definition');");
+            }
             ?>
             <h3>Dodane słówka:</h3>
-<!--            <form method="post" action="ParentPanel.php">-->
-<!--                <label for="db">Uczeń:</label>-->
-<!--                <select id="db" name="db">-->
-<!--                    -->
-<!--                </select><br />-->
-<!--            </form>-->
+            <form method="post" action="ParentPanel.php">
+                <select id="category" name="category1">
+                    <option value="all">Wszystkie</option>
+                    <?php
+                    $zapytanie = $polaczenie->query("SELECT id, name from category where parent_id = $id;");
+                    while ($row = mysqli_fetch_array($zapytanie)){
+                        echo "<option value='$row[0]'>" . $row[1] . "</option>";
+                    }
+                    ?>
+                </select>
+                <input type="submit" value="pokaż">
+            </form>
             <table>
                 <tr>
+                    <th>
+                        Kategoria
+                    </th>
                     <th>
                         Angielski
                     </th>
@@ -140,14 +152,38 @@
 
                 </tr>
                 <?php
-                $zapytanie = $polaczenie->query("SELECT word_en,word_pl, description from words");
-                while ($row = mysqli_fetch_array($zapytanie)){
-                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" . "</tr>";
+                @$category = $_POST["category1"];
+                if ($category == 'all') {
+                    $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description from words join category on category.id = words.category_id;");
+                    while ($row = mysqli_fetch_array($zapytanie)){
+                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td>" . "</tr>";
+                    }
                 }
-                $polaczenie->close();
+                else{
+                    $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description from words join category on category.id = words.category_id where category.id = '$category';");
+                    while ($row = mysqli_fetch_array($zapytanie)){
+                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td>" . "</tr>";
+                    }
+                }
+
+                ?>
+            </table>
+            <h3>Dodane kategorie:</h3>
+            <table>
+                <tr>
+                    <th>Nazwa</th>
+                </tr>
+                <?php
+                $zapytanie = $polaczenie->query("SELECT name from category where parent_id = $id;");
+                while ($row = mysqli_fetch_array($zapytanie)){
+                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "</tr>";
+                }
                 ?>
             </table>
         </section>
     </main>
 </body>
 </html>
+<?php
+$polaczenie->close();
+?>
