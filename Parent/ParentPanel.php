@@ -28,38 +28,44 @@
     <main>
         <section id="dzieci">
            <h3>Twoje dzieci:</h3>
-            <table>
-                <tr>
-                    <th>
-                        Identyfikator
-                    </th>
-                    <th>
-                        Nazwa
-                    </th>
-                </tr>
-                <?php
-                require_once "../connect.php";
+            <form action="ParentPanel.php" method="post">
+                <table>
+                    <tr>
+                        <th>
+                            Identyfikator
+                        </th>
+                        <th>
+                            Nazwa
+                        </th>
+                    </tr>
+                    <?php
+                    require_once "../connect.php";
 
-                $polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
+                    $polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
 
-                if ($polaczenie->connect_errno!=0)
-                {
-                    echo "Error: ".$polaczenie->connect_errno;
-                }
-                else {
-                    $zapytanie = $polaczenie->query("SELECT id, username from users;");
-                    while ($row = mysqli_fetch_array($zapytanie)) {
-                        if ($row['username'] == $_SESSION['user']) {
-                            $id = $row['id'];
+                    if ($polaczenie->connect_errno!=0)
+                    {
+                        echo "Error: ".$polaczenie->connect_errno;
+                    }
+                    else {
+                        $zapytanie = $polaczenie->query("SELECT id, username from users;");
+                        while ($row = mysqli_fetch_array($zapytanie)) {
+                            if ($row['username'] == $_SESSION['user']) {
+                                $id = $row['id'];
+                            }
+                        }
+                        $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
+                        while ($row = mysqli_fetch_array($zapytanie)) {
+                            echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td><button type='submit' name='delete_student' value='".$row[0]."'>usuń</button>". "</tr>";
                         }
                     }
-                    $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
-                    while ($row = mysqli_fetch_array($zapytanie)) {
-                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td><button type='submit' value='".$row[0]."'>usuń</button>". "</tr>";
-                    }
-                }
-                ?>
-            </table>
+                    ?>
+                </table>
+            </form>
+            <?php
+            @$delete_student = $_POST["delete_student"];
+            @mysqli_query($polaczenie, "DELETE FROM student WHERE id = '$delete_student'");
+            ?>
         </section>
         <section id="slowka">
             <h3>Dodaj Kategorie:</h3>
