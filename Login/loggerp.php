@@ -3,11 +3,11 @@ session_start();
 
     if ((!isset($_POST['login'])) || (!isset($_POST['password'])))
     {
-    header('Location: index.html');
+    header('Location: ../index.html');
     exit();
     }
 
-require_once "connect.php";
+require_once "../connect.php";
 
 $polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
 
@@ -38,11 +38,11 @@ $_SESSION['user'] = $wiersz['username'];
 
 unset($_SESSION['blad']);
 $rezultat->free_result();
-header('Location: Panel.php');
+header('Location: ../Parent/ParentPanel.php');
 } else {
 
 $_SESSION['blad'] = '<span style="color:red">Nieprawidłowy login lub hasło!</span>';
-header('Location: index.html');
+header('Location: ../index.html');
 
 }
 

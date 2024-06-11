@@ -22,14 +22,24 @@
     <div id="header">
     <h1 id="title">AngTurbo - skuteczna nauka angielskiego</h1>
     </div>
+    <h2>Rodzic:</h2>
     <div id="loginform">
-    <form method="post" action="logger.php">
+    <form method="post" action="Login/loggerp.php">
         <label for="login">Login:</label>
         <input type="text" name="login" class="tekst"><br />
         <label for="password">Hasło:</label>
         <input type="password" name="password" class="tekst"><br />
         <input type="submit" value="Zaloguj" id="button">
     </form>
+        <h2>Uczeń:</h2>
+        <div id="loginform2">
+            <form method="post" action="Login/loggeru.php">
+                <label for="loginu">Login:</label>
+                <input type="text" name="loginu" class="tekst"><br />
+                <label for="passwordu">Hasło:</label>
+                <input type="password" name="passwordu" class="tekst"><br />
+                <input type="submit" value="Zaloguj" id="button">
+            </form>
     </div>
 </div>
 <div id="footer">

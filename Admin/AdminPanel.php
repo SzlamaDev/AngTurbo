@@ -21,7 +21,7 @@
 <body>
     <h1>AdminPanel</h1>
     <?php
-        echo "<p>Witaj ".$_SESSION['user']. '! [ <a href="logout.php">Wyloguj się!</a> ]</p>';
+        echo "<p>Witaj ".$_SESSION['user']. '! [ <a href="../Login/logout.php">Wyloguj się!</a> ]</p>';
     ?>
     <h3>Lista użytkowników:</h3>
     <table>
@@ -32,9 +32,12 @@
         <th>
             Nazwa
         </th>
+        <th>
+            Rodzic
+        </th>
         </tr>
         <?php
-            require_once "connect.php";
+            require_once "../connect.php";
 
             $polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
 
@@ -48,6 +51,10 @@
                 while ($row = mysqli_fetch_array($zapytanie)){
                     echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" . "</tr>";
                 }
+                $zapytanie = $polaczenie->query("SELECT id, username, parent from student;");
+                while ($row = mysqli_fetch_array($zapytanie)){
+                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" . "<td>" . $row[2] ."</td>" . "</tr>";
+                }
             }
         ?>
     </table>
@@ -55,22 +62,26 @@
     <form method="post" action="AdminPanel.php">
         <label for="db">Uczeń:</label>
         <select id="db" name="db">
-<!--            <option value="1">test1</option>-->
-<!--            <option value="2">test2</option>-->
-<!--            <option value="3">test3</option>-->
             <?php
-            $zapytanie1 = $polaczenie->query("show tables;");
-            while ($row = mysqli_fetch_array($zapytanie1)){
-                echo "<option value='1'>" . $row[0] . "</option>";
-            };
+            $zapytanie = $polaczenie->query("SELECT id, username from student;");
+            while ($row = mysqli_fetch_array($zapytanie)){
+                echo "<option value='$row[0]'>" . $row[1] . "</option>";
+            }
+            ?>
             ?>
         </select><br />
         <label for="word">Słówko:</label>
         <input type="text" id="word" name="word"><br />
+        <label for="definition">Definicja:</label>
+        <input type="text" id="definition" name="definition"><br />
         <input type="submit" value="Dodaj">
     </form>
         <?php
-
+            @$student = $_POST["db"];
+            @$word = $_POST["word"];
+            @$definition = $_POST["definition"];
+            @mysqli_query($polaczenie, "Insert into words(word, definition, student) values ('$word', '$definition', '$student');");
+            $polaczenie->close();
         ?>
     </body>
 </html>

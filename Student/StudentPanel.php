@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	
+
 	if (!isset($_SESSION['zalogowany']))
 	{
 		header('Location: index.html');
@@ -17,13 +17,11 @@
 
     <title>AngTurbo</title>
 </head>
-
+<h1>UCZEŃ</h1>
 <body>
     <?php
-        echo "<p>Witaj ".$_SESSION['user']. '! [ <a href="logout.php">Wyloguj się!</a> ]</p>';
-        if($_SESSION['user'] == 'admin'){
-            header('Location: adminPanel.php');
-        }
+        echo "<p>Witaj ".$_SESSION['user']. '! [ <a href="../Login/logout.php">Wyloguj się!</a> ]</p>';
     ?>
+
 </body>
 </html>
