@@ -62,6 +62,26 @@
             </table>
         </section>
         <section id="slowka">
+            <h3>Dodaj Kategorie:</h3>
+                <form method="post" action="ParentPanel.php">
+                    <label for="db1">Uczeń:</label>
+                    <select id="db1" name="db1">
+                        <?php
+                        $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
+                        while ($row = mysqli_fetch_array($zapytanie)){
+                            echo "<option value='$row[0]'>" . $row[1] . "</option>";
+                        }
+                        ?>
+                    </select><br />
+                    <label for="category_name">Nazwa:</label>
+                    <input type="text" id="category_name" name="category_name"> <br>
+                    <input type="submit" value="Dodaj">
+                </form>
+            <?php
+                @$student = $_POST['db1'];
+                @$category_name = $_POST['category_name'];
+                @mysqli_query($polaczenie,"INSERT INTO category(parent_id, student_id,name) values('$id','$student','$category_name');")
+            ?>
             <h3>Dodaj słówka:</h3>
             <form method="post" action="ParentPanel.php">
                 <label for="db">Uczeń:</label>
