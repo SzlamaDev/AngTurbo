@@ -53,7 +53,7 @@
                             $id = $row['id'];
                         }
                     }
-                    $zapytanie = $polaczenie->query("SELECT id, username from student where parent = $id;");
+                    $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
                     while ($row = mysqli_fetch_array($zapytanie)) {
                         echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" . "</tr>";
                     }
@@ -67,23 +67,36 @@
                 <label for="db">Uczeń:</label>
                 <select id="db" name="db">
                     <?php
-                    $zapytanie = $polaczenie->query("SELECT id, username from student where parent = $id;");
+                    $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
                     while ($row = mysqli_fetch_array($zapytanie)){
                         echo "<option value='$row[0]'>" . $row[1] . "</option>";
                     }
                     ?>
                 </select><br />
-                <label for="word">Słówko:</label>
-                <input type="text" id="word" name="word"><br />
+                <label for="category">Wybierz kategorie:</label>
+                <select id="category" name="category">
+                    <?php
+                    $zapytanie = $polaczenie->query("SELECT id, name from category where parent_id = $id;");
+                    while ($row = mysqli_fetch_array($zapytanie)){
+                        echo "<option value='$row[0]'>" . $row[1] . "</option>";
+                    }
+                    ?>
+                </select><br />
+                <label for="word_en">Angieslkie słówko:</label>
+                <input type="text" id="word_en" name="word_en"><br />
+                <label for="word_pl">Polskie słówko</label>
+                <input type="text" id="word_pl" name="word_pl"><br />
                 <label for="definition">Definicja:</label>
                 <input type="text" id="definition" name="definition"><br />
                 <input type="submit" value="Dodaj">
             </form>
             <?php
             @$student = $_POST["db"];
-            @$word = $_POST["word"];
+            @$category = $_POST["category"];
+            @$word_en = $_POST["word_en"];
+            @$word_pl = $_POST["word_pl"];
             @$definition = $_POST["definition"];
-            @mysqli_query($polaczenie, "Insert into words(word, definition, student) values ('$word', '$definition', '$student');");
+            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student','$word_en','$word_pl' ,'$definition');");
 
             ?>
             <h3>Dodane słówka:</h3>
@@ -96,16 +109,20 @@
             <table>
                 <tr>
                     <th>
-                        Słówko
+                        Angielski
+                    </th>
+                    <th>
+                        Polski
                     </th>
                     <th>
                         Definicja
                     </th>
+
                 </tr>
                 <?php
-                $zapytanie = $polaczenie->query("SELECT word, definition from words");
+                $zapytanie = $polaczenie->query("SELECT word_en,word_pl, description from words");
                 while ($row = mysqli_fetch_array($zapytanie)){
-                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" . "</tr>";
+                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" . "</tr>";
                 }
                 $polaczenie->close();
                 ?>
