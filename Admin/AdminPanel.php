@@ -65,12 +65,7 @@
             <?php
             $zapytanie = $polaczenie->query("SELECT id, username from student;");
             while ($row = mysqli_fetch_array($zapytanie)){
-                echo "<option value='$row[0]'>" . $row[1] . "</option>";
-                $id = $row[0];
-            }
-            $zapytanie = $polaczenie->query("SELECT parent_id from student where id = $id");
-            while ($row = mysqli_fetch_array($zapytanie)){
-                $ruchanie = $row[0];
+                echo "<option value='$row[0]'>" . $row[1]; "</option>";
             }
             ?>
         </select><br />
@@ -93,12 +88,16 @@
     </form>
         <?php
             @$student = $_POST["student"];
+            $zapytanie = $polaczenie->query("SELECT parent_id from student where id = $student;");
+            while ($row = mysqli_fetch_array($zapytanie)){
+                $parent_id = $row[0];
+            }
             @$category = $_POST["category"];
             @$word_pl = $_POST["word_pl"];
             @$word_en = $_POST["word_en"];
             @$definition = $_POST["definition"];
         if (!empty($word_pl) && !empty($word_en)){
-            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category', '$ruchanie', '$student', '$word_en', '$word_pl', '$definition');");
+            @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category', '$parent_id', '$student', '$word_en', '$word_pl', '$definition');");
         }
         else{
             echo "Pola nie moga byc puste!";
