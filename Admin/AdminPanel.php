@@ -277,7 +277,7 @@
     <?php
     @$parentlogin = $_POST["parentlogin"];
     @$parentpasswd = $_POST["parentpasswd"];
-    if (!empty($studentlogin) && !empty($studentpasswd)){
+    if (!empty($parentlogin) && !empty($parentpasswd)){
         mysqli_query($polaczenie, "insert into users(username, passwd) values ('$parentlogin', '$parentpasswd')");
     }
     else{
