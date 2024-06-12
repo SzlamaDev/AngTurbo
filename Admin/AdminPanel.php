@@ -217,7 +217,7 @@
             <?php
             $zapytanie = $polaczenie->query("SELECT id, username from users");
             while ($row = mysqli_fetch_array($zapytanie)){
-                echo "<option value='$row[0]'>" . $row[1]; "</option>";
+                echo "<option value='$row[0]'>" . $row[1] . "</option>";
             }
             ?>
         </select><br />
