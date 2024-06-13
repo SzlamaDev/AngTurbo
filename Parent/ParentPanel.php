@@ -186,15 +186,16 @@
                 <input type="text" id="word_pl" name="word_pl"><br />
                 <label for="definition">Definicja:</label>
                 <input type="text" id="definition" name="definition"><br />
-                <input type="submit" name="submit" value="Dodaj">
+                <input type="submit" value="Dodaj">
             </form>
             <?php
             @$category = $_POST['category'];
             @$word_en = $_POST['word_en'];
             @$word_pl = $_POST['word_pl'];
             @$definition = $_POST['definition'];
+            $query = "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student_id','$word_en','$word_pl' ,'$definition');";
             if (!empty($word_pl) && !empty($word_en)) {
-                @mysqli_query($polaczenie, "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student_id','$word_en','$word_pl' ,'$definition');");
+                @mysqli_query($polaczenie, $query);
             }
             ?>
         </section>
