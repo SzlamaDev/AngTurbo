@@ -198,9 +198,6 @@
             @$word_en = $_POST['word_en'];
             @$word_pl = $_POST['word_pl'];
             @$definition = $_POST['definition'];
-            var_dump($word_pl);
-            var_dump($word_en);
-            var_dump($student_id);
             $query = "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student_id','$word_en','$word_pl' ,'$definition');";
             if (!empty($word_pl) && !empty($word_en)) {
                 @mysqli_query($polaczenie, $query);
