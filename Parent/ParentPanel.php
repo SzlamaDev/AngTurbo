@@ -16,6 +16,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <title>AngTurbo</title>
+    <script>
+        function confirmDeleteStudent(){
+            return confirm("Czy napewno chcesz to usunąć");
+        }
+    </script>
 </head>
 <h1>RODZIC</h1>
 <body>
@@ -28,7 +33,7 @@
     <main>
         <section id="dzieci">
            <h3>Twoje dzieci:</h3>
-            <form action="ParentPanel.php" method="post">
+            <form action="ParentPanel.php" method="post"  onsubmit="return confirmDeleteStudent()">
                 <table>
                     <tr>
                         <th>
@@ -56,7 +61,7 @@
                         }
                         $zapytanie = $polaczenie->query("SELECT id, username from student where parent_id = $id;");
                         while ($row = mysqli_fetch_array($zapytanie)) {
-                            echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td><button type='submit' name='delete_student' value='".$row[0]."'>usuń</button>". "</tr>";
+                            echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td><button type='submit' name='delete_student' value='".$row[0]."'>usuń</button></td>". "</tr>";
                         }
                     }
                     ?>
@@ -69,7 +74,7 @@
         </section>
         <section id="slowka">
             <h3>Dodane słówka:</h3>
-            <form method="post" action="ParentPanel.php" >
+            <form method="post" action="ParentPanel.php">
                 <select id="category" name="category1" onchange="this.form.submit();">
                     <option>Wybierz kategorie</option>
                     <option value="all">Wszystkie</option>
@@ -81,57 +86,81 @@
                     ?>
                 </select>
             </form>
-            <table>
-                <tr>
-                    <th>
-                        Kategoria
-                    </th>
-                    <th>
-                        Angielski
-                    </th>
-                    <th>
-                        Polski
-                    </th>
-                    <th>
-                        Definicja
-                    </th>
+            <form action="ParentPanel.php" method="post" onsubmit="return confirmDeleteStudent()">
+                <table>
+                    <tr>
+                        <th>
+                            Kategoria
+                        </th>
+                        <th>
+                            Angielski
+                        </th>
+                        <th>
+                            Polski
+                        </th>
+                        <th>
+                            Definicja
+                        </th>
 
-                </tr>
-                <?php
-                @$category = $_POST["category1"];
-                if ($category == 'all') {
-                    $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description from words join category on category.id = words.category_id;");
-                    while ($row = mysqli_fetch_array($zapytanie)){
-                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td>" . "</tr>";
+                    </tr>
+                    <?php
+                    @$category = $_POST["category1"];
+                    if ($category == 'all') {
+                        $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description, words.id from words join category on category.id = words.category_id;");
+                        while ($row = mysqli_fetch_array($zapytanie)){
+                            echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td><td><button type='submit' name='delete_word' value='".$row[4]."'>usuń</button></td>" . "</tr>";
+                        }
                     }
-                }
-                else{
-                    $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description from words join category on category.id = words.category_id where category.id = '$category';");
-                    while ($row = mysqli_fetch_array($zapytanie)){
-                        echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td>" . "</tr>";
+                    else{
+                        $zapytanie = $polaczenie->query("SELECT category.name, word_en,word_pl, description, words.id from words join category on category.id = words.category_id where category.id = '$category';");
+                        while ($row = mysqli_fetch_array($zapytanie)){
+                            echo "<tr>" . "<td>" . $row[0] . "</td>" . "<td>" . $row[1] . "</td>" ."<td>". $row[2] . "</td>" ."<td>".$row[3]."</td><td><button type='submit' name='delete_word' value='".$row[4]."'>usuń</button></td>" . "</tr>";
+                        }
                     }
-                }
 
-                ?>
-            </table>
+                    ?>
+                </table>
+            </form>
+            <?php
+            @$delete_word = $_POST["delete_word"];
+            @mysqli_query($polaczenie, "DELETE FROM words WHERE id = '$delete_word'");
+            ?>
             <h3>Dodane kategorie:</h3>
-            <table>
-                <tr>
-                    <th>Nazwa</th>
-                </tr>
-                <?php
-                $zapytanie = $polaczenie->query("SELECT name from category where parent_id = $id;");
-                while ($row = mysqli_fetch_array($zapytanie)){
-                    echo "<tr>" . "<td>" . $row[0] . "</td>" . "</tr>";
-                }
-                ?>
-            </table>
+            <form action="ParentPanel.php" method="post" onsubmit="return confirmDeleteStudent()">
+                <table>
+                    <tr>
+                        <th>Nazwa</th>
+                    </tr>
+                    <?php
+                    $zapytanie = $polaczenie->query("SELECT name,id from category where parent_id = $id;");
+                    while ($row = mysqli_fetch_array($zapytanie)){
+                        echo "<tr>" . "<td>" . $row[0] . "</td><td><button type='submit' name='delete_category' value='".$row[1]."'>usuń</button></td>" . "</tr>";
+                    }
+                    ?>
+                </table>
+            </form>
+            <?php
+            @$delete_category = $_POST["delete_category"];
+            @mysqli_query($polaczenie, "DELETE FROM category WHERE id = '$delete_category'");
+            @mysqli_query($polaczenie, "DELETE FROM words WHERE category_id = '$delete_category'");
+            ?>
         </section>
         <section id="dodawanie">
             <h3>Dodaj dziecko:</h3>
             <form action="ParentPanel.php" method="post">
-
+                <label for="login">Login:</label>
+                <input type="text" name="login" id="login"><br>
+                <label for="password">Hasło:</label>
+                <input type="password" name="password" id="password"><br>
+                <input type="submit" value="Dodaj">
             </form>
+            <?php
+            @$login = $_POST['login'];
+            @$password = $_POST['password'];
+            if (!empty($login) && !empty($password)) {
+                @mysqli_query($polaczenie, "INSERT INTO student (parent_id,username, passwd) VALUES ('$id','$login', '$password');");
+            }
+            ?>
             <h3>Dodaj Kategorie:</h3>
             <form method="post" action="ParentPanel.php">
                 <label for="db1">Uczeń:</label>
