@@ -167,32 +167,40 @@
                     ?>
                 </select><br />
             </form>
-            <?php
-            @$student_id = $_POST["db"];
-            ?>
             <form method="post" action="ParentPanel.php">
-                <label for="category">Wybierz kategorie:</label>
-                <select id="category" name="category">
-                    <?php
-                    $zapytanie = $polaczenie->query("SELECT id, name from category where parent_id = $id and student_id = $student_id;");
-                    while ($row = mysqli_fetch_array($zapytanie)){
-                        echo "<option value='$row[0]'>" . $row[1] . "</option>";
-                    }
-                    ?>
-                </select><br />
-                <label for="word_en">Angieslkie słówko:</label>
-                <input type="text" id="word_en" name="word_en"><br />
-                <label for="word_pl">Polskie słówko</label>
-                <input type="text" id="word_pl" name="word_pl"><br />
-                <label for="definition">Definicja:</label>
-                <input type="text" id="definition" name="definition"><br />
-                <input type="submit" value="Dodaj">
+                <?php
+                @$student_id = $_POST["db"];
+                echo '<select style="display: none" name="student_id">';
+                echo "<option value='$student_id'></option>'>";
+                echo '</select>';
+                if (!empty($student_id)) {
+                    echo '<label for="category">Wybierz kategorie:</label>';
+                    echo '<select id="category" name="category">';
+
+                        $zapytanie = $polaczenie->query("SELECT id, name from category where parent_id = $id and student_id = $student_id;");
+                        while ($row = mysqli_fetch_array($zapytanie)) {
+                            echo "<option value='$row[0]'>" . $row[1] . "</option>";
+                        }
+                    echo '</select><br />';
+                    echo '<label for="word_en">Angieslkie słówko:</label>';
+                    echo '<input type="text" id="word_en" name="word_en"><br />';
+                    echo '<label for="word_pl">Polskie słówko</label>';
+                    echo '<input type="text" id="word_pl" name="word_pl"><br />';
+                    echo '<label for="definition">Definicja:</label>';
+                    echo '<input type="text" id="definition" name="definition"><br />';
+                    echo '<input type="submit" value="Dodaj">';
+                }
+                ?>
             </form>
             <?php
+            @$student_id = $_POST["student_id"];
             @$category = $_POST['category'];
             @$word_en = $_POST['word_en'];
             @$word_pl = $_POST['word_pl'];
             @$definition = $_POST['definition'];
+            var_dump($word_pl);
+            var_dump($word_en);
+            var_dump($student_id);
             $query = "Insert into words(category_id, parent_id, student_id, word_en, word_pl, description) values ('$category','$id','$student_id','$word_en','$word_pl' ,'$definition');";
             if (!empty($word_pl) && !empty($word_en)) {
                 @mysqli_query($polaczenie, $query);
